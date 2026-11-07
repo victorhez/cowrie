@@ -5,7 +5,7 @@ use near_contract_standards::fungible_token::metadata::{FungibleTokenMetadata, F
 use near_contract_standards::fungible_token::{FungibleToken, FungibleTokenCore, FungibleTokenResolver};
 use near_contract_standards::storage_management::{StorageBalance, StorageBalanceBounds, StorageManagement};
 use near_sdk::json_types::U128;
-use near_sdk::{env, near, require, AccountId, BorshStorageKey, NearToken, PanicOnDefault, PromiseOrValue};
+use near_sdk::{near, require, AccountId, BorshStorageKey, NearToken, PanicOnDefault, PromiseOrValue};
 
 const FAUCET_CAP: u128 = 10_000 * 1_000_000; // 10,000 mock-usdc per account, lifetime
 
@@ -101,7 +101,7 @@ impl StorageManagement for Contract {
 
     #[payable]
     fn storage_unregister(&mut self, force: Option<bool>) -> bool {
-        self.token.storage_unregister(force).is_some()
+        self.token.storage_unregister(force)
     }
 
     fn storage_balance_bounds(&self) -> StorageBalanceBounds {
