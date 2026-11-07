@@ -17,7 +17,7 @@ export default function Status() {
               <h3 style={{ fontSize: 17 }}>{s.name}</h3>
               <p>{s.note}</p>
             </div>
-            <span className={`pill ${s.state === "done" ? "ok" : "wait"}`} style={{ alignSelf: "start" }}>{s.state === "done" ? "DONE" : "PENDING"}</span>
+            <span className={`pill ${s.state === "done" ? "ok" : "wait"}`} style={{ alignSelf: "start" }}>{s.state === "done" ? "DONE" : s.state === "partial" ? "PARTIAL" : "PENDING"}</span>
           </div>
         ))}
       </div>

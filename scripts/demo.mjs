@@ -15,34 +15,38 @@ const PERIOD = Number(process.env.PERIOD ?? 45);
 const GRACE = Number(process.env.GRACE ?? 10);
 const C = 100_000_000n; // 100 mUSDC
 const log = (...a) => console.log(...a);
+const FUND = Number(process.env.FUND ?? 0.14); // NEAR per account; gas is reserved up front, so keep it above 0.13
 const short = (id) => id.split("-")[0];
 
 const t = tag();
-const names = ["ada", "bola", "chidi", "dayo", "efe"];
+const MEMBERS = Number(process.env.MEMBERS ?? 5); // 2 to 5; 2 uses the least testnet NEAR
+const names = ["ada", "bola", "chidi", "dayo", "efe"].slice(0, MEMBERS);
+const SKIP_NAME = MEMBERS === 2 ? "bola" : "dayo"; // the member who misses a payment
+const SKIP_ROUND = MEMBERS === 2 ? 0 : 2;
 log(`\n== Cowrie testnet demo ==  circle contract: ${D.circle}\n`);
 log("Creating funded testnet accounts through the faucet helper...");
 const who = {};
-for (const n of names) who[n] = await newAccount(n);
-const keeper = await newAccount("keeper");
+for (const n of names) who[n] = await newAccount(n, FUND);
+const keeper = await newAccount("keeper", FUND);
 const id = (n) => who[n].id;
 
 log("Getting test mock-usdc from the faucet (1,000 each)...");
-for (const n of names) await call(who[n].account, D.token, "faucet", { account_id: id(n), amount: "1000000000" }, { gas: TGAS(30) });
+for (const n of names) await call(who[n].account, D.token, "faucet", { account_id: id(n), amount: "1000000000" }, { gas: TGAS(20) });
 
 const bal = async (acct) => BigInt((await view(D.token, "ft_balance_of", { account_id: acct })));
-const ft = (n, amount, msg) => call(who[n].account, D.token, "ft_transfer_call", { receiver_id: D.circle, amount: String(amount), msg: JSON.stringify(msg) }, { gas: TGAS(150), deposit: 1n });
+const ft = (n, amount, msg) => call(who[n].account, D.token, "ft_transfer_call", { receiver_id: D.circle, amount: String(amount), msg: JSON.stringify(msg) }, { gas: TGAS(msg.action === "join" ? 100 : 60), deposit: 1n });
 
 async function newCircle(name) {
   const before = (await view(D.circle, "list_circles", { from_index: 0, limit: 100 })).length;
   await call(who.ada.account, D.circle, "create_circle", {
-    name, token: D.token, members: 5, contribution: String(C), period_secs: PERIOD, grace_secs: GRACE,
+    name, token: D.token, members: MEMBERS, contribution: String(C), period_secs: PERIOD, grace_secs: GRACE,
     collateral_pct: 100, reserve_bps: 200, tip_cap: "1000000", random_order: false, min_credentials: 1, discount_pct: 50,
-  });
+  }, { gas: TGAS(30) });
   const all = await view(D.circle, "list_circles", { from_index: 0, limit: 100 });
   return all[Math.max(before, all.length - 1)].id;
 }
 
-log("\n1. Create the circle (5 members, 100 mUSDC per round, 100% collateral, 2% safety pot)");
+log(`\n1. Create the circle (${MEMBERS} members, 100 mUSDC per round, 100% collateral, 2% safety pot)`);
 const cid = await newCircle(`Demo ajo ${t}`);
 const need = BigInt(await view(D.circle, "collateral_required", { circle: cid, credentials: 0 }));
 log(`   circle #${cid}; each member must lock ${usdc(need)} mUSDC`);
@@ -56,11 +60,11 @@ let c = await view(D.circle, "get_circle", { circle: cid });
 log(`   status: ${c.status}; order: ${c.order.map(short).join(" > ")}`);
 if (c.status !== "active") throw new Error("circle did not start");
 
-for (let r = 0; r < 5; r++) {
+for (let r = 0; r < MEMBERS; r++) {
   c = await view(D.circle, "get_circle", { circle: cid });
   const round = c.rounds[r];
-  const skip = r === 2 ? "dayo" : null;
-  log(`\n3.${r + 1} Round ${r + 1}: ${skip ? "dayo will miss the payment" : "everyone pays"}`);
+  const skip = r === SKIP_ROUND ? SKIP_NAME : null;
+  log(`\n3.${r + 1} Round ${r + 1}: ${skip ? `${SKIP_NAME} will miss the payment` : "everyone pays"}`);
   for (const n of names) {
     if (n === skip) continue;
     await ft(n, C, { action: "contribute", circle: cid, round: r });
@@ -72,21 +76,21 @@ for (let r = 0; r < 5; r++) {
     for (let i = 0; i < 20 && !(await view(D.circle, "can_settle", { circle: cid })); i++) await sleep(2000);
   }
   const tipBefore = await bal(keeper.id);
-  await call(keeper.account, D.circle, "settle", { circle: cid }, { gas: TGAS(200) });
+  await call(keeper.account, D.circle, "settle", { circle: cid }, { gas: TGAS(60) });
   await sleep(3000);
   c = await view(D.circle, "get_circle", { circle: cid });
   const rd = c.rounds[r];
   log(`   settled: recipient ${rd.recipient ? short(rd.recipient) : "none"} received ${usdc(rd.payout)} mUSDC`);
   if (skip) {
-    const dm = c.members.find((m) => m.id === id("dayo"));
-    log(`   dayo: defaults=${dm.defaults}, collateral now ${usdc(dm.collateral)} (slashed ${usdc(need - BigInt(dm.collateral))})`);
+    const dm = c.members.find((m) => m.id === id(SKIP_NAME));
+    log(`   ${SKIP_NAME}: defaults=${dm.defaults}, collateral now ${usdc(dm.collateral)} (slashed ${usdc(need - BigInt(dm.collateral))})`);
     log(`   keeper tip: ${usdc((await bal(keeper.id)) - tipBefore)} mUSDC from the safety pot`);
   }
   log(`   conservation (in = out + held): ${await view(D.circle, "conserved", { circle: cid })}`);
 }
 
 log("\n4. Finish: return collateral and the leftover safety pot, mint credentials");
-await call(keeper.account, D.circle, "finish", { circle: cid }, { gas: TGAS(300) });
+await call(keeper.account, D.circle, "finish", { circle: cid }, { gas: TGAS(100) });
 await sleep(6000);
 c = await view(D.circle, "get_circle", { circle: cid });
 log(`   status: ${c.status}; funds left in circle: ${usdc(BigInt(c.ledger_in) - BigInt(c.ledger_out))} mUSDC`);
@@ -100,7 +104,7 @@ for (const n of names) {
 log("\n5. Soulbound check: transferring a credential must fail");
 try {
   const tok = (await view(D.credential, "nft_tokens_for_owner", { account_id: id("ada") }))[0];
-  await call(who.ada.account, D.credential, "nft_transfer", { receiver_id: id("bola"), token_id: tok.token_id }, { deposit: 1n });
+  await call(who.ada.account, D.credential, "nft_transfer", { receiver_id: id("bola"), token_id: tok.token_id }, { deposit: 1n, gas: TGAS(10) });
   log("   UNEXPECTED: transfer succeeded");
   process.exitCode = 1;
 } catch (e) {

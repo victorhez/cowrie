@@ -10,7 +10,7 @@
 - The form: project name, lead, email, team size, tracks, mainnet NEAR address, repo URL, post URL, 20 to 2,000 character description. It cannot be edited after submitting.
 - Social Money track hint: shared budgets, rewards and reputation-based access, building on Sputnik DAO and Trezu rather than rebuilding a multisig.
 
-Honest gap: the strongest signal for NEAR judges is a working NEAR integration. The contracts are not done yet. Finishing at least the circle, credential and mock-usdc contracts on testnet before Nov 14 is the highest-value remaining task.
+Remaining gaps judges may notice: wallet actions untested with a real wallet, no gas sponsorship, secretary is rules-based (no NEAR AI Cloud), no mainnet.
 
 ## X post draft
 
@@ -28,9 +28,9 @@ Attach a screen recording of /demo: play three rounds, show the slash and the fu
 
 ## Form description (under 2,000 characters)
 
-Cowrie puts the rotating savings circle (ajo, esusu, susu, tanda) on NEAR. A group pools a fixed amount each period and each member receives the whole pot once. The contract is meant to hold the money, enforce the schedule, slash collateral from members who miss a payment, pay the recipient in full and record every contribution publicly. On completion each member receives a non-transferable credential showing rounds completed, on-time payments and defaults, which lowers collateral in future circles. A safety pot and prepaid autopay reduce shortfalls, and anyone can settle a round for a small tip.
+Cowrie puts the rotating savings circle (ajo, esusu, susu, tanda) on NEAR. A group pools a fixed amount each period and each member receives the whole pot once. The contract holds the money, enforce the schedule, slash collateral from members who miss a payment, pay the recipient in full and record every contribution publicly. On completion each member receives a non-transferable credential showing rounds completed, on-time payments and defaults, which lowers collateral in future circles. A safety pot and prepaid autopay reduce shortfalls, and anyone can settle a round for a small tip.
 
-What is built and verifiable today: a reference rules engine with unit and property tests over thousands of random circles; Circle Lab, a Monte Carlo study that runs the real engine to recommend collateral and safety-pot levels; an independent-oracle equivalence check; a read-only secretary; and a web app with a no-wallet demo using accelerated rounds. What is pending: the NEAR contracts, wallet flow and testnet deployment. Honest limits: not insurance, random order can be influenced, unaudited, simulation only. Try it: https://cowrie-rho.vercel.app
+What is built and verifiable today: a reference rules engine with unit and property tests over thousands of random circles; Circle Lab, a Monte Carlo study that runs the real engine to recommend collateral and safety-pot levels; an independent-oracle equivalence check; a read-only secretary; and a web app with a no-wallet demo using accelerated rounds. What runs on NEAR testnet: three Rust contracts (circle, soulbound credential, test token) that replay 300 generated scenarios identically to the reference engine, and a complete circle played on-chain (slash, settler tip, credentials, collateral discount). What is pending: wallet actions tested with a real wallet, gas sponsorship, NEAR AI Cloud secretary, mainnet. Honest limits: not insurance, random order can be influenced, unaudited, testnet only. Try it: https://cowrie-rho.vercel.app
 
 Tracks: Social Money, Real-World Money, NFTs That Do Something.
 
@@ -38,6 +38,6 @@ Tracks: Social Money, Real-World Money, NFTs That Do Something.
 
 - [ ] Repo public, LICENSE present
 - [ ] Live demo works without a wallet
-- [ ] Contracts on testnet (pending)
+- [x] Contracts on testnet
 - [ ] Demo video recorded, X post public
 - [ ] Mainnet NEAR address ready, form submitted before the deadline

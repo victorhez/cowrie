@@ -43,7 +43,7 @@ export default function Create() {
       <div className="kicker">Create wizard</div>
       <h2>Plan a circle that <span className="lime">won&apos;t break</span></h2>
       <div className="notice" style={{ marginBottom: 22 }}>
-        <b>Planner only.</b> Deploying a circle needs the NEAR contracts, which are <b>pending</b>. The recommendations below are real, computed from the Circle Lab tables.
+        <b>Planner.</b> The recommendations below are computed from the Circle Lab tables. To create the circle on NEAR testnet, use <a className="lime" href="/circles">Circles</a>.
       </div>
       <div className="demo">
         <div className="card">

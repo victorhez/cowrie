@@ -65,7 +65,7 @@ export default function Demo() {
       <h2>Watch a circle <span className="lime">enforce itself</span></h2>
       <div className="notice" style={{ marginBottom: 20 }}>
         <b>Labelled simulation.</b> This runs Cowrie&apos;s reference engine in your browser with accelerated 2-minute rounds and test
-        amounts. The NEAR smart contracts are <b>pending</b>, so nothing here touches a blockchain.
+        amounts. Nothing here touches a blockchain. The same rules run on NEAR testnet: see <a className="lime" href="/circles">on-chain circles</a>.
       </div>
 
       <div className="card" style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>

@@ -121,7 +121,7 @@ export default function Home() {
         <div className="wrap">
           <div className="kicker">Honest progress</div>
           <h2>What works, <span className="lime">what is pending</span></h2>
-          <p className="sub">The rules engine, tests, simulations and app are done. The NEAR smart contracts are the main open item and are not yet deployed.</p>
+          <p className="sub">The rules engine, tests, simulations, app and the NEAR testnet contracts are done. Wallet buttons are wired but untested with a real wallet; gas sponsorship, the AI secretary on NEAR AI Cloud, the score API and mainnet are pending.</p>
           <div className="tablewrap">
             <table>
               <thead><tr><th>Item</th><th>State</th></tr></thead>
@@ -129,7 +129,7 @@ export default function Home() {
                 {STATUS.map((s) => (
                   <tr key={s.id}>
                     <td>{s.name}</td>
-                    <td className={s.state === "done" ? "yes" : "part"}>{s.state === "done" ? "Done" : "Pending"}</td>
+                    <td className={s.state === "done" ? "yes" : "part"}>{s.state === "done" ? "Done" : s.state === "partial" ? "Partial" : "Pending"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -146,8 +146,8 @@ export default function Home() {
           <p className="sub">Cowrie is designed to earn its keep without ever holding customer money.</p>
           <div className="road">
             {[
-              ["Nov 2026", "Hackathon prototype", ["Reference engine, property tests, Circle Lab", "Web app and no-wallet demo", "Testnet contracts and wallet flow (in progress)"]],
-              ["Q1 2027", "Testnet beta", ["Contracts for factory, circle, credential, token", "Gas sponsorship so members need no NEAR", "Pilot with 3 to 5 real groups in Lagos using test funds", "Independent contract review"]],
+              ["Nov 2026", "Hackathon prototype", ["Reference engine, property tests, Circle Lab", "Web app and no-wallet demo", "Testnet contracts deployed; full circle run on testnet"]],
+              ["Q1 2027", "Testnet beta", ["Factory with a contract per circle and 24-member circles", "Gas sponsorship so members need no NEAR", "Pilot with 3 to 5 real groups in Lagos using test funds", "Independent contract review"]],
               ["Q2 2027", "Mainnet beta", ["Security audit, then capped mainnet circles", "Naira on and off ramp partners", "Pidgin, Yoruba, Hausa, Igbo secretary"]],
               ["H2 2027", "Revenue", ["Protocol fee of a small share of each payout, set at creation and visible to members", "Cowrie Score API for lenders and fintechs (pay per query)", "White-label circles for cooperatives and employers"]],
               ["2028", "Network", ["Credential-backed micro-credit from third-party lenders", "Yield on idle balances with strict limits", "Cross-chain funding via NEAR Intents"]],

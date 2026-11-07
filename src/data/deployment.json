@@ -2,8 +2,8 @@
   "network": "testnet",
   "rpc": "https://test.rpc.fastnear.com",
   "explorer": "https://testnet.nearblocks.io",
-  "circle": "cowrie-circle-b07415.testnet",
+  "circle": "cto4o69.cowrie-circle-b07415.testnet",
   "credential": "cowrie-cred-b07415.testnet",
   "token": "cowrie-usdc-b07415.testnet",
-  "deployedAt": "2026-11-07T10:25:22.693Z"
+  "deployedAt": "2026-11-07T10:37:36.365Z"
 }

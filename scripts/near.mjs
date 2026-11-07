@@ -37,7 +37,7 @@ export async function accountExists(id) {
  * Fallback: if .keys/testnet.json holds the deployer's keys, create a sub-account funded from the
  * deployer's own testnet NEAR. Returns { id, secretKey, account }.
  */
-export async function newAccount(name) {
+export async function newAccount(name, fundNear = 0.2) {
   const kp = KeyPair.fromRandom("ed25519");
   const pub = kp.getPublicKey().toString();
   const base = `${name}-${tag()}`;
@@ -64,10 +64,11 @@ export async function newAccount(name) {
       const free = v ? BigInt(v.amount) - BigInt(v.storage_usage) * 10_000_000_000_000_000_000n : 0n;
       if (free > best) { best = free; funderId = k; }
     }
-    if (!funderId || best < 1_000_000_000_000_000_000_000_000n) throw new Error("Faucet is rate limited and the deployer accounts are low on testnet NEAR.");
+    const want = BigInt(Math.round(fundNear * 1e6)) * 10n ** 18n;
+    if (!funderId || best < want + 50_000_000_000_000_000_000_000n) throw new Error("Faucet is rate limited and the deployer accounts are low on testnet NEAR.");
     const funder = accountFromKey(funderId, keys[funderId]);
     id = `${base}.${funderId}`;
-    await funder.createAccount(id, pub, 800_000_000_000_000_000_000_000n); // 0.8 NEAR
+    await funder.createAccount(id, pub, want);
   }
   for (let i = 0; i < 30; i++) { if (await accountExists(id)) break; await sleep(1000); }
   return { id, secretKey: kp.toString(), account: new Account(id, provider, new KeyPairSigner(kp)) };

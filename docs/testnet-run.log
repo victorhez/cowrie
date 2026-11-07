@@ -1,73 +1,40 @@
 
-== Cowrie testnet demo ==  circle contract: cowrie-circle-b07415.testnet
+== Cowrie testnet demo ==  circle contract: cto4o69.cowrie-circle-b07415.testnet
 
 Creating funded testnet accounts through the faucet helper...
 Getting test mock-usdc from the faucet (1,000 each)...
 
-1. Create the circle (5 members, 100 mUSDC per round, 100% collateral, 2% safety pot)
-   circle #1; each member must lock 400 mUSDC
+1. Create the circle (2 members, 100 mUSDC per round, 100% collateral, 2% safety pot)
+   circle #2; each member must lock 100 mUSDC
 
 2. Members join and lock collateral (the circle starts when the last seat fills)
    ada joined
    bola joined
-   chidi joined
-   dayo joined
-   efe joined
-   status: active; order: ada > bola > chidi > dayo > efe
+   status: active; order: ada > bola
 
-3.1 Round 1: everyone pays
-   settled: recipient ada received 490 mUSDC
+3.1 Round 1: bola will miss the payment
+   waiting 32s for the deadline and grace period...
+   settled: recipient ada received 198 mUSDC
+   bola: defaults=1, collateral now 0 (slashed 100)
+   keeper tip: 1 mUSDC from the safety pot
    conservation (in = out + held): true
 
 3.2 Round 2: everyone pays
-   settled: recipient bola received 490 mUSDC
+   settled: recipient bola received 196 mUSDC
    conservation (in = out + held): true
 
-3.3 Round 3: dayo will miss the payment
-   waiting 73s for the deadline and grace period...
-C:\Users\USER\Documents\projects\panta hackathon\cowrie\node_modules\@near-js\utils\lib\commonjs\index.cjs:1174
-  const server_tx_error = new ServerTransactionError();
-                          ^
+4. Finish: return collateral and the leftover safety pot, mint credentials
+   status: completed; funds left in circle: 0 mUSDC
+   ada    credential: 2/2 on time, 0 default(s)  | Cowrie Score 720  | balance 1,000.5 mUSDC
+   bola   credential: 1/2 on time, 1 default(s)  | Cowrie Score 270  | balance 998.5 mUSDC
 
-ServerTransactionError: {"index":0,"kind":{"index":0,"kind":{"FunctionCallError":{"ExecutionError":"Returning joint promise is currently prohibited."}}}}
-    at parseResultError (C:\Users\USER\Documents\projects\panta hackathon\cowrie\node_modules\@near-js\utils\lib\commonjs\index.cjs:1174:27)
-    at Account.signAndSendTransaction (C:\Users\USER\Documents\projects\panta hackathon\cowrie\node_modules\near-api-js\node_modules\@near-js\accounts\lib\commonjs\account.cjs:249:47)
-    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-    at async Account.callFunctionRaw (C:\Users\USER\Documents\projects\panta hackathon\cowrie\node_modules\near-api-js\node_modules\@near-js\accounts\lib\commonjs\account.cjs:484:12)
-    at async Account.callFunction (C:\Users\USER\Documents\projects\panta hackathon\cowrie\node_modules\near-api-js\node_modules\@near-js\accounts\lib\commonjs\account.cjs:461:21)
-    at async file:///C:/Users/USER/Documents/projects/panta%20hackathon/cowrie/scripts/demo.mjs:75:3 {
-  type: 'ActionError',
-  context: undefined,
-  transaction_outcome: {
-    block_hash: '5UKbJsUxHsJzWB9XzkpAdpSwjQMYAQmjaiZCqsH6H5Xc',
-    id: '71SkoJThm36hqiWGYhQQML41fDpoRyeNgD2YphSDSQHE',
-    outcome: {
-      executor_id: 'keeper-5862ea.cowrie-cred-b07415.testnet',
-      gas_burnt: 308917806870,
-      logs: [],
-      metadata: { gas_profile: null, version: 1 },
-      receipt_ids: [ '9SdU4UQZfdFzbj1X95eEbPdmNhsAuV71zx94AMtHpNbW' ],
-      status: {
-        SuccessReceiptId: '9SdU4UQZfdFzbj1X95eEbPdmNhsAuV71zx94AMtHpNbW'
-      },
-      tokens_burnt: '30891780687000000000'
-    },
-    proof: [
-      {
-        direction: 'Right',
-        hash: 'DsEWYASgo1BRgFHfJPNc4qEVhUmnz1B5PRRW1DTMJcYL'
-      }
-    ]
-  },
-  index: 0,
-  kind: {
-    index: 0,
-    kind: {
-      FunctionCallError: {
-        ExecutionError: 'Returning joint promise is currently prohibited.'
-      }
-    }
-  }
-}
+5. Soulbound check: transferring a credential must fail
+   transfer rejected (soulbound)
 
-Node.js v24.20.0
+6. Returning-member discount: ada (1 credential) joins a new circle
+   collateral for a credentialed member: 50 mUSDC (new members: 100)
+   ada locked 50 mUSDC
+
+Done. See it on chain: https://testnet.nearblocks.io/address/cto4o69.cowrie-circle-b07415.testnet
+Public page: circle #2 at /circle/2
+
