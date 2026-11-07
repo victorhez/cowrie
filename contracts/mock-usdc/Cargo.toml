@@ -1,0 +1,17 @@
+[package]
+name = "mock-usdc"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Cowrie mock-usdc contract"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "5"
+near-contract-standards = "5"
+
+[dev-dependencies]
+near-sdk = { version = "5", features = ["unit-testing"] }
+serde_json = "1"

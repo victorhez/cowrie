@@ -14,6 +14,7 @@
     "simulate": "tsx tools/simulate/run.ts",
     "equivalence": "tsx tools/simulate/equivalence.ts",
     "eval:secretary": "tsx tools/secretary-eval/run.ts",
+    "vectors": "tsx tools/gen-vectors.ts",
     "demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
