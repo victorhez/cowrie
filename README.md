@@ -112,7 +112,7 @@ Results from the last run on the submitted commit:
 | Production build and type check | passed |
 | Browser check: `/demo` three rounds, and `/circle/2` read from testnet | passed |
 
-**Bug found by the testnet run.** The first on-chain run failed in a round that paid both a recipient and a settler tip: NEAR does not allow a function to return a joint promise. The unit tests could not catch it because it depends on the runtime. It was fixed by firing the transfers as independent receipts, the contract was redeployed, and the run above passed. Circle #1 on the contract is an aborted run from before the fix; circles cannot be deleted, so it stays listed.
+**Bug found by the testnet run.** The first on-chain run failed in a round that paid both a recipient and a settler tip: NEAR does not allow a function to return a joint promise. The unit tests could not catch it because it depends on the runtime. It was fixed by firing the transfers as independent receipts, the contract was redeployed, and the run above passed. Circle #1 on the live contract is an abandoned 5-member run (its test accounts ran out of testnet NEAR for gas in round 1) and circle #3 is the open circle left by the discount step of the demo. Circles cannot be deleted, so both stay listed.
 
 **Caveats.** The secretary questions were written by the same authors who wrote the answerer, so 100% shows no regressions, not general language ability. The property-test harness drives the engine with random behaviour; it does not replace formal verification or an audit. The wallet buttons in the web app have not been tested with a real wallet. On-chain runs so far use 2 members; the 5-member on-chain path ran through round 2 before the fix, and the 12-member gas path was not exercised.
 
