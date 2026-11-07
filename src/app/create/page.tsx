@@ -35,7 +35,7 @@ export default function Create() {
   const p = defaultParams({ members: n, contribution: amount * 1_000_000, collateralPct: colPct, reserveBps: resBps });
   const collateral = collateralRequired(p, 0);
   const pot = n * p.contribution - Math.floor((n * p.contribution * resBps) / 10000);
-  const link = `https://cowrie.vercel.app/join/${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const link = `https://cowrie-rho.vercel.app/join/${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const wa = `https://wa.me/?text=${encodeURIComponent(`Join our savings circle "${name}" on Cowrie. ${n} members, ${amount} USDC ${period}. ${link}`)}`;
 
   return (

@@ -4,7 +4,7 @@
 
 Built at NEAR HACKATHON 2026 (Nov 1 to Nov 14). Tracks: Social Money, Real-World Money, NFTs That Do Something.
 
-Live demo (no wallet needed): https://cowrie.vercel.app
+Live demo (no wallet needed): https://cowrie-rho.vercel.app
 
 > **Status in one line:** the rules engine, tests, simulations and web app are working and verifiable today. The NEAR smart contracts are **not written or deployed yet**; the demo is a labelled in-browser simulation of the reference engine. See [What works and what is pending](#what-works-and-what-is-pending).
 
