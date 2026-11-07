@@ -1,0 +1,707 @@
+{
+ "generatedWith": {
+  "circlesPerCell": 1000,
+  "target": 0.95,
+  "engine": "src/engine/circle.ts"
+ },
+ "cells": [
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.618,
+   "avgShortfallPct": 2.914411705752663,
+   "recoveryPct": 97.08558829424734
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.618,
+   "avgShortfallPct": 2.3151341113715493,
+   "recoveryPct": 97.68486588862845
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.72,
+   "avgShortfallPct": 1.4454958804105897,
+   "recoveryPct": 98.55450411958941
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.02,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.286,
+   "avgShortfallPct": 6.790173177607602,
+   "recoveryPct": 93.20982682239227
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.286,
+   "avgShortfallPct": 5.659792712896662,
+   "recoveryPct": 94.34020728710333
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.412,
+   "avgShortfallPct": 3.976090043877313,
+   "recoveryPct": 96.0239099561227
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.991,
+   "avgShortfallPct": 0.03624647603705195,
+   "recoveryPct": 99.96375352396295
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.991,
+   "avgShortfallPct": 0.02309582713472018,
+   "recoveryPct": 99.97690417286528
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.996,
+   "avgShortfallPct": 0.00508722470695466,
+   "recoveryPct": 99.99491277529305
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.05,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.076,
+   "avgShortfallPct": 12.396864686468549,
+   "recoveryPct": 87.60313531353135
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.076,
+   "avgShortfallPct": 11.027985451606428,
+   "recoveryPct": 88.97201454839362
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.132,
+   "avgShortfallPct": 8.903074517978046,
+   "recoveryPct": 91.09692548202189
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.975,
+   "avgShortfallPct": 0.10313531353135316,
+   "recoveryPct": 99.89686468646865
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.975,
+   "avgShortfallPct": 0.06726948205024585,
+   "recoveryPct": 99.93273051794975
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.985,
+   "avgShortfallPct": 0.013461872503039776,
+   "recoveryPct": 99.98653812749696
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.1,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.005,
+   "avgShortfallPct": 22.667868409193765,
+   "recoveryPct": 77.33213159080667
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.005,
+   "avgShortfallPct": 21.315632156422602,
+   "recoveryPct": 78.68436784357728
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.011,
+   "avgShortfallPct": 19.18597756220174,
+   "recoveryPct": 80.81402243779796
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.848,
+   "avgShortfallPct": 0.7570977917981059,
+   "recoveryPct": 99.24290220820188
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.848,
+   "avgShortfallPct": 0.5414279276379323,
+   "recoveryPct": 99.45857207236207
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.883,
+   "avgShortfallPct": 0.21180712032447033,
+   "recoveryPct": 99.78819287967553
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 5,
+   "p": 0.2,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.135,
+   "avgShortfallPct": 2.4690612737699147,
+   "recoveryPct": 97.53093872623
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.29,
+   "avgShortfallPct": 1.2306908878854914,
+   "recoveryPct": 98.76930911211451
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.647,
+   "avgShortfallPct": 0.38741586837604525,
+   "recoveryPct": 99.61258413162396
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.02,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.008,
+   "avgShortfallPct": 5.704545454545749,
+   "recoveryPct": 94.29545454545455
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.025,
+   "avgShortfallPct": 4.10695311182312,
+   "recoveryPct": 95.89304688817676
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.173,
+   "avgShortfallPct": 2.112005219660753,
+   "recoveryPct": 97.88799478033928
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.05,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0,
+   "avgShortfallPct": 10.680173661361033,
+   "recoveryPct": 89.31982633863966
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0,
+   "avgShortfallPct": 9.045975731937885,
+   "recoveryPct": 90.9540242680619
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0.005,
+   "avgShortfallPct": 6.580558598990868,
+   "recoveryPct": 93.41944140100892
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.992,
+   "avgShortfallPct": 0.004452855393521095,
+   "recoveryPct": 99.99554714460648
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.1,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 0,
+   "reserveBps": 0,
+   "fullPayoutRate": 0,
+   "avgShortfallPct": 20.759731543624042,
+   "recoveryPct": 79.24026845637584
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 0,
+   "reserveBps": 200,
+   "fullPayoutRate": 0,
+   "avgShortfallPct": 19.197096288178983,
+   "recoveryPct": 80.80290371182029
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 0,
+   "reserveBps": 500,
+   "fullPayoutRate": 0,
+   "avgShortfallPct": 16.735429176968967,
+   "recoveryPct": 83.26457082303072
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.934,
+   "avgShortfallPct": 0.05503355704697981,
+   "recoveryPct": 99.94496644295302
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.993,
+   "avgShortfallPct": 0.002410628681002602,
+   "recoveryPct": 99.997589371319
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 50,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 100,
+   "reserveBps": 200,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  },
+  {
+   "members": 10,
+   "p": 0.2,
+   "collateralPct": 100,
+   "reserveBps": 500,
+   "fullPayoutRate": 1,
+   "avgShortfallPct": 0,
+   "recoveryPct": 100
+  }
+ ],
+ "recommendations": {
+  "5:0.02": {
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "meetsTarget": true
+  },
+  "5:0.05": {
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.991,
+   "meetsTarget": true
+  },
+  "5:0.1": {
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.975,
+   "meetsTarget": true
+  },
+  "5:0.2": {
+   "collateralPct": 100,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "meetsTarget": true
+  },
+  "10:0.02": {
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "meetsTarget": true
+  },
+  "10:0.05": {
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 1,
+   "meetsTarget": true
+  },
+  "10:0.1": {
+   "collateralPct": 50,
+   "reserveBps": 0,
+   "fullPayoutRate": 0.992,
+   "meetsTarget": true
+  },
+  "10:0.2": {
+   "collateralPct": 50,
+   "reserveBps": 200,
+   "fullPayoutRate": 0.993,
+   "meetsTarget": true
+  }
+ }
+}

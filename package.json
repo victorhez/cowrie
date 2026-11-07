@@ -1,0 +1,33 @@
+{
+  "name": "cowrie",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Savings circles on NEAR, where the rules are code and the history is proof.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "fuzz": "vitest run --config vitest.fuzz.config.ts",
+    "simulate": "tsx tools/simulate/run.ts",
+    "equivalence": "tsx tools/simulate/equivalence.ts",
+    "eval:secretary": "tsx tools/secretary-eval/run.ts",
+    "demo": "tsx scripts/demo.ts"
+  },
+  "dependencies": {
+    "next": "^15.5.29",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "fast-check": "^4.10.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
