@@ -15,9 +15,16 @@
     "equivalence": "tsx tools/simulate/equivalence.ts",
     "eval:secretary": "tsx tools/secretary-eval/run.ts",
     "vectors": "tsx tools/gen-vectors.ts",
-    "demo": "tsx scripts/demo.ts"
+    "build:contracts": "bash scripts/build-contracts.sh",
+    "deploy:testnet": "node scripts/deploy.mjs",
+    "demo": "node scripts/demo.mjs"
   },
   "dependencies": {
+    "@near-wallet-selector/core": "^10.1.4",
+    "@near-wallet-selector/meteor-wallet": "^10.1.4",
+    "@near-wallet-selector/modal-ui": "^10.1.4",
+    "@near-wallet-selector/my-near-wallet": "^10.1.4",
+    "near-api-js": "^6.5.1",
     "next": "^15.5.29",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

@@ -209,26 +209,26 @@ impl Contract {
 
     // -------------------------------------------------------------- circle actions
 
-    pub fn leave(&mut self, circle: u64) -> Promise {
+    pub fn leave(&mut self, circle: u64) {
         let who = env::predecessor_account_id();
         let c = self.circles.get_mut(&circle).unwrap_or_else(|| env::panic_str("no_circle"));
         let t = c.leave(who.as_str()).unwrap_or_else(|e| env::panic_str(&e));
         let token: AccountId = c.token.parse().unwrap();
         emit("left", &format!("{{\"circle\":{},\"member\":\"{}\"}}", circle, who));
-        Self::pay(&token, t)
+        Self::pay(&token, t);
     }
 
-    pub fn cancel(&mut self, circle: u64) -> Promise {
+    pub fn cancel(&mut self, circle: u64) {
         let who = env::predecessor_account_id();
         let c = self.circles.get_mut(&circle).unwrap_or_else(|| env::panic_str("no_circle"));
         let t = c.cancel(who.as_str()).unwrap_or_else(|e| env::panic_str(&e));
         let token: AccountId = c.token.parse().unwrap();
         emit("cancelled", &format!("{{\"circle\":{}}}", circle));
-        Self::pay(&token, t)
+        Self::pay(&token, t);
     }
 
     /// Anyone can settle once everyone has paid or the deadline plus grace has passed.
-    pub fn settle(&mut self, circle: u64) -> Promise {
+    pub fn settle(&mut self, circle: u64) {
         let caller = env::predecessor_account_id();
         let c = self.circles.get_mut(&circle).unwrap_or_else(|| env::panic_str("no_circle"));
         let (events, t) = c.settle(caller.as_str(), now()).unwrap_or_else(|e| env::panic_str(&e));
@@ -236,31 +236,30 @@ impl Contract {
         for e in events {
             emit(e.kind, &e.data);
         }
-        Self::pay(&token, t)
+        Self::pay(&token, t);
     }
 
     /// Anyone can finish after the last round. Returns funds and mints credentials.
-    pub fn finish(&mut self, circle: u64) -> Promise {
+    pub fn finish(&mut self, circle: u64) {
         let c = self.circles.get_mut(&circle).unwrap_or_else(|| env::panic_str("no_circle"));
         let (t, mints) = c.finish().unwrap_or_else(|e| env::panic_str(&e));
         require!(!t.is_empty() || !mints.is_empty(), "already_finished");
         let token: AccountId = c.token.parse().unwrap();
         let cid = c.id;
         emit("finished", &format!("{{\"circle\":{}}}", cid));
-        let mut p = Self::pay(&token, t);
+        Self::pay(&token, t);
         if let Some(cred) = self.credential.clone() {
             for m in mints {
-                p = p.and(ext_credential::ext(cred.clone()).with_static_gas(GAS_MINT).mint(
+                let _ = ext_credential::ext(cred.clone()).with_static_gas(GAS_MINT).mint(
                     cid.to_string(),
                     m.member.parse().unwrap(),
                     m.rounds,
                     m.on_time,
                     m.defaults,
-                ));
+                );
                 emit("credential_minted", &format!("{{\"circle\":{},\"member\":\"{}\"}}", cid, m.member));
             }
         }
-        p
     }
 
     /// Creator-approved seat transfer after the circle starts.
@@ -315,19 +314,14 @@ impl Contract {
 
     // --------------------------------------------------------------------- helpers
 
-    fn pay(token: &AccountId, transfers: Vec<engine::Transfer>) -> Promise {
-        let mut p: Option<Promise> = None;
+    /// Fires one ft_transfer per payment. They are independent receipts: NEAR does not allow a
+    /// function to return a joint promise, and nothing needs to wait on them.
+    fn pay(token: &AccountId, transfers: Vec<engine::Transfer>) {
         for t in transfers {
-            let call = ext_ft::ext(token.clone())
+            let _ = ext_ft::ext(token.clone())
                 .with_attached_deposit(NearToken::from_yoctonear(1))
                 .with_static_gas(GAS_FT_TRANSFER)
                 .ft_transfer(t.to.parse().unwrap(), U128(t.amount), None);
-            p = Some(match p {
-                Some(prev) => prev.and(call),
-                None => call,
-            });
         }
-        // An empty set of transfers still needs a Promise return type: a no-op self call.
-        p.unwrap_or_else(|| Promise::new(env::current_account_id()))
     }
 }
