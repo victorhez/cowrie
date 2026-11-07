@@ -9,7 +9,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   createCircle, defaultParams, join, start, contribute, prepay, settle, finish, currentRound, transferSeat, collateralRequired,
-} from "../src/engine/circle";
+} from "../src/engine/circle.ts";
 
 function mulberry(seed: number) {
   let a = seed >>> 0;
@@ -59,8 +59,9 @@ for (let k = 0; k < COUNT; k++) {
   if (params.orderMode === "creator" && r() < 0.5) {
     order = [...ids].sort(() => r() - 0.5);
   }
-  start(c, 0, order);
-  ops.push({ op: "start", now: 0, order: order ?? null });
+  const given = order ? [...order] : null; // engine keeps a reference and later mutates it on seat transfer
+  start(c, 0, order ? [...order] : undefined);
+  ops.push({ op: "start", now: 0, order: given });
 
   const dp = pick([0, 0.05, 0.2, 0.5, 0.9]);
   let guard = 0;

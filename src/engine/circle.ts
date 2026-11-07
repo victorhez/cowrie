@@ -76,8 +76,10 @@ export interface Circle {
 }
 
 export class CircleError extends Error {
-  constructor(public code: string, msg?: string) {
+  code: string;
+  constructor(code: string, msg?: string) {
     super(msg ?? code);
+    this.code = code;
   }
 }
 const fail = (code: string, msg?: string): never => {
