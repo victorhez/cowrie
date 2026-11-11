@@ -3,6 +3,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { CircleJ, DEPLOY, TGAS, isDeployed, short, usdc, view } from "@/lib/near";
 import { useWallet } from "@/components/Wallet";
+import GasNotice from "@/components/GasNotice";
+
+/** Turn raw wallet/RPC errors into plain-language messages. */
+function friendly(e: unknown): string {
+  const s = String(e);
+  if (/storage_deposit|not registered/i.test(s)) return "This account is not registered on the token yet. Press 'Get test mock-usdc' first.";
+  if (/balance|NotEnoughBalance|not enough/i.test(s)) return "Not enough tokens or testnet NEAR for this step. Get test funds, then try again.";
+  if (/reject|denied|cancel/i.test(s)) return "The transaction was cancelled in the wallet. Nothing was sent.";
+  if (/network|fetch|timeout/i.test(s)) return "Network problem. Check your connection and try again.";
+  return "That did not go through: " + s.slice(0, 200);
+}
 
 export default function CircleView({ id }: { id: number }) {
   const { accountId, call, connect } = useWallet();
@@ -11,6 +22,7 @@ export default function CircleView({ id }: { id: number }) {
   const [conserved, setConserved] = useState<boolean | null>(null);
   const [now, setNow] = useState(Math.floor(Date.now() / 1000));
   const [msg, setMsg] = useState("");
+  const [loadErr, setLoadErr] = useState(false);
   const [prepay, setPrepay] = useState(10);
 
   const load = useCallback(async () => {
@@ -20,7 +32,8 @@ export default function CircleView({ id }: { id: number }) {
       setC(x);
       setCanSettle(await view<boolean>(DEPLOY.circle!, "can_settle", { circle: id }));
       setConserved(await view<boolean>(DEPLOY.circle!, "conserved", { circle: id }));
-    } catch (e) { setMsg(String(e)); }
+      setLoadErr(false);
+    } catch { setLoadErr(true); }
   }, [id]);
 
   useEffect(() => {
@@ -31,7 +44,11 @@ export default function CircleView({ id }: { id: number }) {
   }, [load]);
 
   if (!isDeployed()) return <main className="wrap" style={{ paddingTop: 50 }}><div className="notice">Contracts are not configured in this build.</div></main>;
-  if (c === undefined) return <main className="wrap" style={{ paddingTop: 50 }}>Loading circle {id}…</main>;
+  if (c === undefined) return (
+    <main className="wrap" style={{ paddingTop: 50 }}>
+      {loadErr ? <div className="notice">Could not read circle {id} from the NEAR testnet RPC. It may be slow or down. <button className="btn small" onClick={load}>Try again</button></div> : <>Loading circle {id} from testnet…</>}
+    </main>
+  );
   if (c === null) return <main className="wrap" style={{ paddingTop: 50 }}><div className="notice">Circle {id} does not exist.</div></main>;
 
   const p = c.params;
@@ -42,7 +59,7 @@ export default function CircleView({ id }: { id: number }) {
   const run = (label: string, fn: () => Promise<void>) => async () => {
     if (!accountId) return connect();
     setMsg(label + "…");
-    try { await fn(); setMsg(label + " sent. Refreshing…"); setTimeout(load, 4000); } catch (e) { setMsg(String(e)); }
+    try { await fn(); setMsg(label + " sent. Refreshing…"); setTimeout(load, 4000); } catch (e) { setMsg(friendly(e)); }
   };
 
   const ftCall = (amount: string, m: object) => call(DEPLOY.token!, "ft_transfer_call", { receiver_id: DEPLOY.circle, amount, msg: JSON.stringify(m) }, { deposit: "1", gas: TGAS(150) });
@@ -63,6 +80,7 @@ export default function CircleView({ id }: { id: number }) {
 
   return (
     <main className="wrap" style={{ paddingTop: 50 }}>
+      <GasNotice />
       <div className="kicker">Circle #{c.id} · public view, no wallet needed</div>
       <h2>{c.name}</h2>
       <p className="sub">
