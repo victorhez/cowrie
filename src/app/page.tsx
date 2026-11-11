@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HeroShell } from "@/components/Shell";
-import { STATUS } from "@/data/status";
+import { STATUS, LAB_CONFIGS } from "@/data/status";
 
 const done = STATUS.filter((s) => s.state === "done").length;
 
@@ -27,6 +27,7 @@ export default function Home() {
           </div>
           <div className="shellStage">
             <HeroShell />
+            <div className="mute" style={{ position: "absolute", bottom: -26, left: 0, fontSize: 11 }}>Illustration: numbers from the demo simulation, not live funds.</div>
             <div className="chip" style={{ top: 30, right: 0 }}><b>5 of 5</b>members paid</div>
             <div className="chip" style={{ bottom: 60, left: 0 }}><b>492 USDC</b>paid to Chidi</div>
             <div className="chip" style={{ bottom: 10, right: 20 }}><b>Dayo slashed</b>pot still paid in full</div>
@@ -34,8 +35,8 @@ export default function Home() {
         </div>
         <div className="wrap">
           <div className="stats">
-            <div className="stat"><b>0</b><span>organizers holding your money</span></div>
-            <div className="stat"><b>48</b><span>risk configurations simulated</span></div>
+            <div className="stat"><b>0</b><span>organizer-held funds by design: the contract holds the money (testnet deploy key: see README)</span></div>
+            <div className="stat"><b>{LAB_CONFIGS}</b><span>risk configurations simulated</span></div>
             <div className="stat"><b>11</b><span>invariants property-tested</span></div>
             <div className="stat"><b>{done}/{STATUS.length}</b><span>build items shipped</span></div>
           </div>
@@ -47,7 +48,7 @@ export default function Home() {
           <div className="kicker">The problem</div>
           <h2>Trust is the <span className="lime">whole product</span></h2>
           <p className="sub">
-            Hundreds of millions of people save in rotating circles. They run on notebooks, WhatsApp groups and the
+            Many millions of people save in rotating circles. They run on notebooks, WhatsApp groups and the
             organizer&apos;s good name. That is why they break.
           </p>
           <div className="grid g4">

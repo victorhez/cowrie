@@ -40,7 +40,7 @@ Cowrie targets each of these directly. Collateral and the safety pot are not set
 | Contract rules match the reference engine | Done | Rust engine replays 300 generated scenarios (2,073 settled rounds) with identical payouts, recipients, balances and ledgers |
 | Full circle on testnet | Done | `npm run demo`: slash, tip, finish, credentials, soulbound check, collateral discount |
 | Unit and property tests (TypeScript) | Done | 20 unit tests; property tests on 5,500 random circles |
-| Circle Lab simulator and recommender | Done | 48 configurations, tables in [`docs/CIRCLE_LAB.md`](docs/CIRCLE_LAB.md) |
+| Circle Lab simulator and recommender | Done | 72 configurations (4 default rates x 3 collateral levels x 3 safety-pot levels x 2 group sizes), tables in [`docs/CIRCLE_LAB.md`](docs/CIRCLE_LAB.md) |
 | Equivalence check vs independent oracle | Done | 6 of 6 scenarios match |
 | Web app: landing, demo, planner, Circle Lab, status | Done | works without a wallet |
 | On-chain pages `/circles`, `/circle/[id]` (read-only) | Done | read straight from the testnet contract, no wallet |
@@ -171,6 +171,14 @@ docs/                     RULES.md, CIRCLE_LAB.md, SUBMISSION.md
 
 Rules summary and the mapping from invariants to tests: [`docs/RULES.md`](docs/RULES.md).
 
+## Who can touch the testnet contracts
+
+The circle contract has no admin withdrawal function, but its deploy account key is held by the author (testnet only). The credential contract has one owner who can set the minter. Details and what was and was not reviewed: [`docs/security-notes.md`](docs/security-notes.md). "Same rules on NEAR" means: join, contribute, settle, defaults, slashing, safety pot, tip and credentials run on-chain; seat transfer, exit and prepaid autopay exist in the engine and contract code but are not yet verified on-chain.
+
+## Gas
+
+Members pay gas themselves. Get free testnet NEAR from https://near-faucet.io/ . There is no sponsorship or relayer yet.
+
 ## Comparison with related projects
 
 Based on each project's public page as read in November 2026. I did not run their products or read their code.
@@ -183,8 +191,9 @@ Based on each project's public page as read in November 2026. I did not run thei
 | Published invariant tests | Not stated | Not stated | Yes (engine) |
 | Portable credential or score | Yes | Planned | Yes: soulbound credential and on-chain score (testnet) |
 | Live on a public network | Mainnet | Testnets | No |
+| Yield, marketplace, proof of personhood | Not stated | Receivables marketplace and auctions | No (not built) |
 
-AjoAI is live on mainnet and ROSA on testnets; Cowrie is on NEAR testnet only. Cowrie's difference is the measured safety margin and the credential that reduces collateral.
+AjoAI is live on mainnet and ROSA on testnets; Cowrie is on NEAR testnet only. Cowrie is not the first savings circle on a blockchain and some related projects are broader. Cowrie's difference is the measured safety margin and the credential that reduces collateral.
 
 ## Roadmap
 

@@ -1,3 +1,8 @@
+import lab from "./circle-lab.json";
+
+/** Number of Circle Lab configurations, taken from the published data so pages cannot disagree. */
+export const LAB_CONFIGS: number = lab.cells.length;
+
 export type State = "done" | "partial" | "pending";
 export interface Item { id: string; name: string; state: State; note: string }
 
@@ -5,7 +10,7 @@ export interface Item { id: string; name: string; state: State; note: string }
 export const STATUS: Item[] = [
   { id: "engine", name: "Circle rules engine (reference implementation)", state: "done", note: "TypeScript state machine: join, leave, start, contribute, autopay, settle, default, slash, safety pot, offsets, skipped turns, seat transfer, finish, credentials." },
   { id: "tests", name: "Unit and property tests", state: "done", note: "20 unit tests; property tests over thousands of random circles checking conservation, one payout per round, bounded slashing, idempotence, tip cap." },
-  { id: "lab", name: "Circle Lab (Monte Carlo) and recommender", state: "done", note: "Drives the real engine. 48 configurations, published tables, wizard reads them." },
+  { id: "lab", name: "Circle Lab (Monte Carlo) and recommender", state: "done", note: `Drives the real engine. ${LAB_CONFIGS} configurations (members x default rate x collateral x safety pot), published tables, wizard reads them.` },
   { id: "equiv", name: "Equivalence check against an independent oracle", state: "done", note: "6 scenarios compared with closed-form arithmetic." },
   { id: "web", name: "Web app: landing, demo mode, create wizard, public circle view", state: "done", note: "Runs without a wallet. Demo uses accelerated 2-minute rounds." },
   { id: "secretary-rules", name: "Secretary, rules-based mode (read-only)", state: "done", note: "30-question eval. Questions were written by the authors, so this is a regression check, not an independent benchmark." },

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DEPLOY, SummaryJ, isDeployed, view, short } from "@/lib/near";
 import { useWallet } from "@/components/Wallet";
+import GasNotice from "@/components/GasNotice";
 
 export default function Circles() {
   const { accountId, call, connect } = useWallet();
@@ -12,10 +13,12 @@ export default function Circles() {
   const [f, setF] = useState({ name: "Market Women Ajo", members: 5, amount: 10, period: 3600, grace: 600, col: 100, bps: 200, tip: 0.1 });
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
+  const load = () => {
     if (!isDeployed()) return;
-    view<SummaryJ[]>(DEPLOY.circle!, "list_circles", { from_index: 0, limit: 50 }).then(setList).catch((e) => setErr(String(e)));
-  }, []);
+    setErr("");
+    view<SummaryJ[]>(DEPLOY.circle!, "list_circles", { from_index: 0, limit: 50 }).then(setList).catch(() => setErr("Could not reach the NEAR testnet RPC. It may be slow or down."));
+  };
+  useEffect(load, []);
 
   const create = async () => {
     if (!accountId) return connect();
@@ -43,9 +46,10 @@ export default function Circles() {
             Everything below is read straight from the contract at{" "}
             <a className="lime" href={`${DEPLOY.explorer}/address/${DEPLOY.circle}`} target="_blank" rel="noreferrer">{DEPLOY.circle}</a>. No wallet is needed to look.
           </p>
-          {err && <div className="notice">{err}</div>}
+          {err && <div className="notice">{err} <button className="btn small" onClick={load}>Try again</button></div>}
+          <GasNotice />
           <div className="grid g3" style={{ marginBottom: 30 }}>
-            {list === null ? <div className="card">Loading…</div> : list.length === 0 ? <div className="card">No circles yet. Create the first one below.</div> :
+            {list === null ? <div className="card">{err ? "Circles could not be loaded." : "Loading circles from testnet…"}</div> : list.length === 0 ? <div className="card">No circles yet. Create the first one below.</div> :
               list.map((c) => (
                 <Link key={c.id} href={`/circle/${c.id}`} className="card hot">
                   <h3>{c.name}</h3>
