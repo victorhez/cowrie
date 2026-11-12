@@ -72,10 +72,10 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const call: Ctx["call"] = useCallback(async (receiverId, method, args, opts) => {
     if (!selector.current) throw new Error("Wallets are still loading. Wait a moment and try again.");
     const w = await selector.current.wallet();
-    return await w.signAndSendTransaction({
-      receiverId,
-      actions: [{ type: "FunctionCall", params: { methodName: method, args, gas: opts?.gas ?? "100000000000000", deposit: opts?.deposit ?? "0" } }],
-    });
+    // Wallet Selector v10 takes NAJ actions (near-api-js), not the older { type, params } objects.
+    const { transactions } = await import("near-api-js");
+    const action = transactions.functionCall(method, args, BigInt(opts?.gas ?? "100000000000000"), BigInt(opts?.deposit ?? "0"));
+    return await w.signAndSendTransaction({ receiverId, actions: [action] });
   }, []);
 
   return <WalletCtx.Provider value={{ accountId, ready, initError, connect, disconnect, call }}>{children}</WalletCtx.Provider>;
