@@ -17,9 +17,11 @@
     "vectors": "tsx tools/gen-vectors.ts",
     "build:contracts": "bash scripts/build-contracts.sh",
     "deploy:testnet": "node scripts/deploy.mjs",
-    "demo": "node scripts/demo.mjs"
+    "demo": "node scripts/demo.mjs",
+    "mcp": "tsx tools/mcp/server.ts"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@near-wallet-selector/bitget-wallet": "^10.1.4",
     "@near-wallet-selector/core": "^10.1.4",
     "@near-wallet-selector/here-wallet": "^10.1.4",
@@ -35,7 +37,8 @@
     "near-api-js": "^6.5.1",
     "next": "^15.5.29",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

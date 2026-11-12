@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { CircleJ, DEPLOY, TGAS, isDeployed, short, usdc, view } from "@/lib/near";
 import { useWallet } from "@/components/Wallet";
 import GasNotice from "@/components/GasNotice";
+import AskSecretary from "@/components/AskSecretary";
 
 /** Turn raw wallet/RPC errors into plain-language messages. */
 function friendly(e: unknown): string {
@@ -120,6 +121,8 @@ export default function CircleView({ id }: { id: number }) {
           );
         })}
       </div>
+
+      <AskSecretary circle={id} />
 
       <div className="demo">
         <div className="card">

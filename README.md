@@ -45,12 +45,12 @@ Cowrie targets each of these directly. Collateral and the safety pot are not set
 | Web app: landing, demo, planner, Circle Lab, status | Done | works without a wallet |
 | On-chain pages `/circles`, `/circle/[id]` (read-only) | Done | read straight from the testnet contract, no wallet |
 | Wallet actions (join, pay, settle, finish, create) | **Partial** | wired to the contracts with NEAR Wallet Selector; not yet exercised with a real wallet |
-| Secretary, rules-based mode | Done | read-only; 30/30 on a self-authored eval (see caveat below) |
+| Secretary, rules-based mode | Done | read-only; 30/30 on the authors' own questions but only 3/10 on 10 differently worded questions (see caveat below) |
 | Cowrie Score | Done | formula in the engine and an on-chain `score` view on the credential contract |
 | Sub-account-per-circle factory | Pending | v1 holds many circles in one contract; 12 members max on-chain (engine supports 24) |
-| Gas sponsorship (NEP-366 relayer or drip) | Pending | members need a little testnet NEAR |
-| Secretary on NEAR AI Cloud | Pending | rules-based mode ships now |
-| Score API, MCP server, x402 endpoint | Pending | x402 package on NEAR not yet verified |
+| Gas for judges | Partial | faucet instructions beside every wallet action; a testnet drip endpoint (`/api/drip`) is built and turns on when the host sets `COWRIE_DRIP_ACCOUNT` and `COWRIE_DRIP_KEY`. It is a drip, not gas sponsorship; a NEP-366 relayer is roadmap |
+| Secretary on NEAR AI Cloud | Partial | model mode (`/api/secretary`) is built with read-only tools and falls back to rules-based; it is off unless `NEAR_AI_API_KEY` is set and has not been run against the live API |
+| Score API and MCP server | Partial | `GET /api/score/<account>` and an MCP stdio server (`npm run mcp`); x402 not built |
 | NEAR Intents funding, mainnet demo, audit | Pending | stretch |
 
 The same list is on the site at `/status`.
@@ -94,7 +94,7 @@ npm run dev        # http://localhost:3000
 | Vectors are reproducible | `npm run vectors` | rewrites `contracts/circle/tests/vectors.json` identically |
 | Collateral and safety-pot recommendations | `npm run simulate` | prints the recommendation table; rewrites `docs/CIRCLE_LAB.md` and `src/data/circle-lab.json` |
 | Engine matches an independent oracle | `npm run equivalence` | `All 6 scenarios match.` |
-| Secretary answers correctly | `npm run eval:secretary` | `30/30 correct = 100.0%` |
+| Secretary answers correctly | `npm run eval:secretary` | `33/40 correct = 82.5%` (30/30 original, 3/10 extra; misses listed) |
 | Full circle on testnet | `npm run demo` | see above |
 | Contracts build to wasm | `npm run build:contracts` | wasm files in `contracts/out/` (Rust with the `wasm32-unknown-unknown` target) |
 
@@ -107,14 +107,14 @@ Results from the last run on the submitted commit:
 | Rust: engine vs TypeScript vectors | 1 / 1 passed (300 scenarios, 2,073 settled rounds, identical) |
 | Rust: credential and mock-usdc unit tests | 6 / 6 passed |
 | Equivalence scenarios | 6 / 6 matched |
-| Secretary eval | 30 / 30 correct |
+| Secretary eval | 30 / 30 on the original questions; 3 / 10 on the extra questions (misses published by the script) |
 | Testnet run (2-member, `docs/testnet-run.log`) | passed: slash 100, tip 1, payouts 198 and 196, funds left in circle 0, scores 720 and 270, soulbound transfer rejected, discounted collateral 50 vs 100 |
 | Production build and type check | passed |
 | Browser check: `/demo` three rounds, and `/circle/2` read from testnet | passed |
 
 **Bug found by the testnet run.** The first on-chain run failed in a round that paid both a recipient and a settler tip: NEAR does not allow a function to return a joint promise. The unit tests could not catch it because it depends on the runtime. It was fixed by firing the transfers as independent receipts, the contract was redeployed, and the run above passed. Circle #1 on the live contract is an abandoned 5-member run (its test accounts ran out of testnet NEAR for gas in round 1) and circle #3 is the open circle left by the discount step of the demo. Circles cannot be deleted, so both stay listed.
 
-**Caveats.** The secretary questions were written by the same authors who wrote the answerer, so 100% shows no regressions, not general language ability. The property-test harness drives the engine with random behaviour; it does not replace formal verification or an audit. The wallet buttons in the web app have not been tested with a real wallet. On-chain runs so far use 2 members; the 5-member on-chain path ran through round 2 before the fix, and the 12-member gas path was not exercised.
+**Caveats.** The original 30 secretary questions were written by the same authors who wrote the answerer, so 100% shows no regressions, not general language ability. 10 extra questions worded differently (written by an AI, not by a human third party) score 3/10; the rules-based secretary only matches known phrasings. The property-test harness drives the engine with random behaviour; it does not replace formal verification or an audit. The wallet buttons in the web app have not been tested with a real wallet. On-chain runs so far use 2 members; the 5-member on-chain path ran through round 2 before the fix, and the 12-member gas path was not exercised.
 
 ## Circle Lab
 
@@ -177,7 +177,17 @@ The circle contract has no admin withdrawal function, but its deploy account key
 
 ## Gas
 
-Members pay gas themselves. Get free testnet NEAR from https://near-faucet.io/ . There is no sponsorship or relayer yet.
+Members pay gas themselves. Get free testnet NEAR from https://near-faucet.io/ . There is no sponsorship or relayer. If the host sets `COWRIE_DRIP_ACCOUNT` and `COWRIE_DRIP_KEY` (secrets, never in the repo), a "Get test funds" button appears and `POST /api/drip` sends 0.1 testnet NEAR and 1,000 mock-usdc to an existing testnet account, limited to one per account and five per IP per day, with `COWRIE_DRIP_DISABLED=1` as a kill switch. Limits are kept per server instance. This is a testnet drip, not gas sponsorship.
+
+## Score API, MCP server and secretary model mode
+
+- Score: `GET /api/score/<account>.testnet` returns the Cowrie Score, the credentials and the formula terms, read from the credential contract.
+- MCP (stdio, read-only, no keys): `npm run mcp`. Client config:
+  ```json
+  { "mcpServers": { "cowrie": { "command": "npx", "args": ["tsx", "tools/mcp/server.ts"], "cwd": "/path/to/cowrie" } } }
+  ```
+  Tools: `cowrie_score` and `cowrie_circle_status`. The handshake and tool list were tested locally; live chain reads need network access to the NEAR RPC.
+- Secretary: `POST /api/secretary {circle, question}`. With `NEAR_AI_API_KEY` set it calls the OpenAI-compatible NEAR AI Cloud API (`https://cloud-api.near.ai/v1`, model chosen from `/models` at runtime unless `NEAR_AI_MODEL` is set) with read-only tools and answers only from their output; with no key, or on any failure, it uses the rules-based secretary. It has no tool that signs or sends a transaction. It has not been run against the live API, and no recorded fixtures exist yet because no key was available.
 
 ## Comparison with related projects
 
