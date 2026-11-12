@@ -10,7 +10,7 @@ interface Ctx {
   initError: boolean;
   connect: () => void;
   disconnect: () => void;
-  call: (receiverId: string, method: string, args: Record<string, unknown>, opts?: { deposit?: string; gas?: string }) => Promise<void>;
+  call: (receiverId: string, method: string, args: Record<string, unknown>, opts?: { deposit?: string; gas?: string }) => Promise<any>;
 }
 const WalletCtx = createContext<Ctx>({ accountId: null, ready: false, initError: false, connect() {}, disconnect() {}, async call() {} });
 export const useWallet = () => useContext(WalletCtx);
@@ -70,8 +70,9 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     setAccountId(null);
   }, []);
   const call: Ctx["call"] = useCallback(async (receiverId, method, args, opts) => {
+    if (!selector.current) throw new Error("Wallets are still loading. Wait a moment and try again.");
     const w = await selector.current.wallet();
-    await w.signAndSendTransaction({
+    return await w.signAndSendTransaction({
       receiverId,
       actions: [{ type: "FunctionCall", params: { methodName: method, args, gas: opts?.gas ?? "100000000000000", deposit: opts?.deposit ?? "0" } }],
     });

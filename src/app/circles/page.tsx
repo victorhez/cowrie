@@ -5,6 +5,7 @@ import Link from "next/link";
 import { DEPLOY, SummaryJ, isDeployed, view, short } from "@/lib/near";
 import { useWallet } from "@/components/Wallet";
 import GasNotice from "@/components/GasNotice";
+import { checkOutcome, friendly, returnedFromWallet, txLink } from "@/lib/tx";
 
 export default function Circles() {
   const { accountId, call, connect } = useWallet();
@@ -12,6 +13,7 @@ export default function Circles() {
   const [err, setErr] = useState("");
   const [f, setF] = useState({ name: "Market Women Ajo", members: 5, amount: 10, period: 3600, grace: 600, col: 100, bps: 200, tip: 0.1 });
   const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<{ kind: "info" | "ok" | "err"; text: string; hash?: string } | null>(null);
 
   const load = () => {
     if (!isDeployed()) return;
@@ -19,17 +21,36 @@ export default function Circles() {
     view<SummaryJ[]>(DEPLOY.circle!, "list_circles", { from_index: 0, limit: 50 }).then(setList).catch(() => setErr("Could not reach the NEAR testnet RPC. It may be slow or down."));
   };
   useEffect(load, []);
+  useEffect(() => {
+    const r = returnedFromWallet();
+    if (r.error) setStatus({ kind: "err", text: friendly(r.error) });
+    else if (r.hash) { setStatus({ kind: "ok", text: "Your wallet sent the transaction. If it succeeded, the new circle appears in the list above.", hash: r.hash }); setTimeout(load, 3000); }
+  }, []);
 
   const create = async () => {
     if (!accountId) return connect();
+    const problem =
+      !f.name.trim() ? "Give the circle a name." :
+      !(f.members >= 2 && f.members <= 12) ? "Members must be between 2 and 12." :
+      !(f.amount > 0) ? "Contribution must be more than 0." :
+      !(f.period >= 60) ? "Round length must be at least 60 seconds." :
+      f.grace >= f.period ? "The grace period must be shorter than the round length." : "";
+    if (problem) return setStatus({ kind: "err", text: problem });
     setBusy(true);
+    setStatus({ kind: "info", text: "Waiting for your wallet. Approve the transaction in the wallet window (check for a blocked pop-up if nothing appears)." });
+    const slow = setTimeout(() => setStatus({ kind: "info", text: "Still waiting for your wallet. If no window opened, allow pop-ups for this site, or press Create circle again." }), 20000);
     try {
-      await call(DEPLOY.circle!, "create_circle", {
-        name: f.name, token: DEPLOY.token, members: f.members, contribution: String(Math.round(f.amount * 1e6)),
+      const out = await call(DEPLOY.circle!, "create_circle", {
+        name: f.name.trim(), token: DEPLOY.token, members: f.members, contribution: String(Math.round(f.amount * 1e6)),
         period_secs: f.period, grace_secs: f.grace, collateral_pct: f.col, reserve_bps: f.bps,
         tip_cap: String(Math.round(f.tip * 1e6)), random_order: false, min_credentials: 1, discount_pct: 50,
-      });
-    } finally { setBusy(false); }
+      }, { gas: "100000000000000" });
+      const hash = checkOutcome(out);
+      setStatus({ kind: "ok", text: "Circle created on NEAR testnet. Refreshing the list…", hash: hash ?? undefined });
+      setTimeout(load, 3000);
+    } catch (e) {
+      setStatus({ kind: "err", text: friendly(e) });
+    } finally { clearTimeout(slow); setBusy(false); }
   };
 
   const num = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF({ ...f, [k]: Number(e.target.value) });
@@ -73,7 +94,13 @@ export default function Circles() {
               <div><label>Settler tip cap (mock-usdc)</label><input type="number" min={0} step={0.1} value={f.tip} onChange={num("tip")} /></div>
             </div>
             <p className="mute" style={{ fontSize: 13, margin: "10px 0" }}>Not sure what to pick? The <Link className="lime" href="/create">planner</Link> recommends collateral and safety pot from the Circle Lab tables.</p>
-            <button className="btn solid" onClick={create} disabled={busy}>{accountId ? "Create circle" : "Connect wallet to create"}</button>
+            <button className="btn solid" onClick={create} disabled={busy}>{busy ? "Waiting for wallet…" : accountId ? "Create circle" : "Connect wallet to create"}</button>
+            {status && (
+              <div className="notice" role="status" style={{ marginTop: 14, borderColor: status.kind === "err" ? "var(--warn)" : undefined }}>
+                {status.text}
+                {status.hash && <> <a className="lime" href={txLink(status.hash)} target="_blank" rel="noreferrer">View transaction</a></>}
+              </div>
+            )}
           </div>
         </>
       )}
