@@ -4,16 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { CircleJ, DEPLOY, TGAS, isDeployed, short, usdc, view } from "@/lib/near";
 import { useWallet } from "@/components/Wallet";
 import GasNotice from "@/components/GasNotice";
-
-/** Turn raw wallet/RPC errors into plain-language messages. */
-function friendly(e: unknown): string {
-  const s = String(e);
-  if (/storage_deposit|not registered/i.test(s)) return "This account is not registered on the token yet. Press 'Get test mock-usdc' first.";
-  if (/balance|NotEnoughBalance|not enough/i.test(s)) return "Not enough tokens or testnet NEAR for this step. Get test funds, then try again.";
-  if (/reject|denied|cancel/i.test(s)) return "The transaction was cancelled in the wallet. Nothing was sent.";
-  if (/network|fetch|timeout/i.test(s)) return "Network problem. Check your connection and try again.";
-  return "That did not go through: " + s.slice(0, 200);
-}
+import { checkOutcome, friendly, returnedFromWallet, txLink } from "@/lib/tx";
+import AskSecretary from "@/components/AskSecretary";
 
 export default function CircleView({ id }: { id: number }) {
   const { accountId, call, connect } = useWallet();
@@ -22,6 +14,8 @@ export default function CircleView({ id }: { id: number }) {
   const [conserved, setConserved] = useState<boolean | null>(null);
   const [now, setNow] = useState(Math.floor(Date.now() / 1000));
   const [msg, setMsg] = useState("");
+  const [txHash, setTxHash] = useState<string | null>(null);
+  useEffect(() => { const r = returnedFromWallet(); if (r.error) setMsg(friendly(r.error)); else if (r.hash) { setMsg("Your wallet sent the transaction. Refreshing…"); setTxHash(r.hash); } }, []);
   const [loadErr, setLoadErr] = useState(false);
   const [prepay, setPrepay] = useState(10);
 
@@ -56,10 +50,13 @@ export default function CircleView({ id }: { id: number }) {
   const me = c.members.find((m) => m.id === accountId);
   const done = c.rounds.filter((r) => r.settled).length;
 
-  const run = (label: string, fn: () => Promise<void>) => async () => {
+  const run = (label: string, fn: () => Promise<unknown>) => async () => {
     if (!accountId) return connect();
-    setMsg(label + "…");
-    try { await fn(); setMsg(label + " sent. Refreshing…"); setTimeout(load, 4000); } catch (e) { setMsg(friendly(e)); }
+    setMsg(label + ": waiting for your wallet. Approve it in the wallet window (check for a blocked pop-up).");
+    try {
+      const hash = checkOutcome(await fn());
+      setMsg(label + " done. Refreshing…"); setTxHash(hash); setTimeout(load, 4000);
+    } catch (e) { setTxHash(null); setMsg(friendly(e)); }
   };
 
   const ftCall = (amount: string, m: object) => call(DEPLOY.token!, "ft_transfer_call", { receiver_id: DEPLOY.circle, amount, msg: JSON.stringify(m) }, { deposit: "1", gas: TGAS(150) });
@@ -68,7 +65,7 @@ export default function CircleView({ id }: { id: number }) {
   const join = run("Joining", async () => {
     const creds = await view<number>(DEPLOY.credential!, "credential_count", { account_id: accountId });
     const req = await view<string>(DEPLOY.circle!, "collateral_required", { circle: id, credentials: creds });
-    await ftCall(req, { action: "join", circle: id });
+    return ftCall(req, { action: "join", circle: id });
   });
   const contribute = run("Contributing", () => ftCall(p.contribution, { action: "contribute", circle: id, round: cur!.index }));
   const doPrepay = run("Prepaying", () => ftCall(String(Math.round(prepay * 1e6)), { action: "prepay", circle: id }));
@@ -92,7 +89,7 @@ export default function CircleView({ id }: { id: number }) {
         <div>
           <b className="display lime" style={{ fontSize: 18 }}>{c.status === "open" ? `Open: ${c.members.length}/${p.members} seats filled` : c.status === "active" ? `Round ${(cur?.index ?? 0) + 1} of ${p.members}` : c.status}</b>
           {cur && <p className="mute" style={{ fontSize: 14 }}>{secsLeft > 0 ? `Due in ${secsLeft}s` : canSettle ? "Past deadline and grace: anyone can settle now." : "In grace period."}</p>}
-          {msg && <p style={{ fontSize: 13, marginTop: 4 }}>{msg}</p>}
+          {msg && <p style={{ fontSize: 13, marginTop: 4 }}>{msg}{txHash && <> <a className="lime" href={txLink(txHash)} target="_blank" rel="noreferrer">View transaction</a></>}</p>}
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <button className="btn small" onClick={faucet}>Get test mock-usdc</button>
@@ -120,6 +117,8 @@ export default function CircleView({ id }: { id: number }) {
           );
         })}
       </div>
+
+      <AskSecretary circle={id} />
 
       <div className="demo">
         <div className="card">

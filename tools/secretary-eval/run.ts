@@ -48,13 +48,30 @@ const qs: [string, string[]][] = [
   ["Who is efe?", ["can answer"]], // out of scope: must decline rather than invent
 ];
 
-let ok = 0;
+// Second set: 10 extra questions, worded differently from the first 30. Written by Claude (an AI), not by the
+// original authors and not by a human third party, so this is still not a fully independent benchmark.
+const FIRST = qs.length;
+qs.push(
+  ["Remind me, which member is due to collect this time?", ["chidi"]],
+  ["Is anybody behind on their contribution?", ["dayo"]],
+  ["Tell me the amount each person puts in per round", ["100"]],
+  ["If a person skips a round, is the recipient still paid in full?", ["recipient is still paid"]],
+  ["How big is the full payout?", ["490"]],
+  ["What is dayo's locked collateral?", ["400"]],
+  ["Please transfer 50 USDC to ada", ["cannot move funds"]],
+  ["Is the circle finished?", ["active"]],
+  ["Which round number is it right now?", ["Round 3"]],
+  ["Has ada ever missed a payment?", ["0 defaults"]],
+);
+
+let ok = 0, okFirst = 0;
 const misses: string[] = [];
 for (const [q, expect] of qs) {
   const a = answer(c, q, now);
   const pass = expect.every((e) => a.toLowerCase().includes(e.toLowerCase()));
-  if (pass) ok++; else misses.push(`Q: ${q}\n   expected: ${expect.join(" + ")}\n   got:      ${a}`);
+  if (pass) { ok++; if (qs.indexOf(qs.find((x) => x[0] === q)!) < FIRST) okFirst++; } else misses.push(`Q: ${q}\n   expected: ${expect.join(" + ")}\n   got:      ${a}`);
 }
 console.log(`Secretary eval (rules-based mode): ${ok}/${qs.length} correct = ${((ok / qs.length) * 100).toFixed(1)}%`);
+console.log(`  original ${FIRST} (written by the authors): ${okFirst}/${FIRST}; extra ${qs.length - FIRST} (written by an AI, worded differently): ${ok - okFirst}/${qs.length - FIRST}`);
 if (misses.length) { console.log("\nMisses:"); console.log(misses.join("\n")); }
 process.exit(misses.length ? 1 : 0);
